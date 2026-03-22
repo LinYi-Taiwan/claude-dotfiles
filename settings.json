@@ -1,0 +1,39 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__pencil",
+      "mcp__claude_ai_Figma__get_screenshot",
+      "mcp__claude_ai_Figma__get_design_context",
+      "mcp__claude_ai_Figma__get_metadata"
+    ]
+  },
+  "enabledPlugins": {
+    "ralph-wiggum@claude-plugins-official": true,
+    "ralph-loop@claude-plugins-official": true,
+    "issue-to-dev@local-plugins": true,
+    "feature-dev@claude-plugins-official": true,
+    "developer-kit-typescript@developer-kit": true,
+    "github-spec-kit@developer-kit": true
+  },
+  "extraKnownMarketplaces": {
+    "local-plugins": {
+      "source": {
+        "source": "directory",
+        "path": "/Users/linyi/Desktop/automation/claude_code_plugins"
+      }
+    },
+    "claude-code-plugins": {
+      "source": {
+        "source": "github",
+        "repo": "anthropics/claude-code"
+      }
+    },
+    "developer-kit": {
+      "source": {
+        "source": "github",
+        "repo": "giuseppe-trisciuoglio/developer-kit"
+      }
+    }
+  },
+  "skipDangerousModePermissionPrompt": true
+}
