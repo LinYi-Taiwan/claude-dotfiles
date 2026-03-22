@@ -13,13 +13,14 @@
     "issue-to-dev@local-plugins": true,
     "feature-dev@claude-plugins-official": true,
     "developer-kit-typescript@developer-kit": true,
-    "github-spec-kit@developer-kit": true
+    "github-spec-kit@developer-kit": true,
+    "frontend-design@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
     "local-plugins": {
       "source": {
         "source": "directory",
-        "path": "/Users/linyi/Desktop/automation/claude_code_plugins"
+        "path": "__LOCAL_PLUGINS_PATH__"
       }
     },
     "claude-code-plugins": {

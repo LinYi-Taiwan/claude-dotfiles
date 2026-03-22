@@ -1,0 +1,9 @@
+{
+  "name": "issue-to-dev",
+  "version": "0.1.0",
+  "description": "Automate GitHub issue triage with multi-angle review (PM, Tech Lead, UX), design mockup generation, FE feasibility checks, and guided development with auto PR creation",
+  "author": {
+    "name": "LinYi"
+  },
+  "keywords": ["github", "issue", "review", "design", "development", "automation"]
+}
