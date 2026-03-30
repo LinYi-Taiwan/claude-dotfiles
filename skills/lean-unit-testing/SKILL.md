@@ -170,7 +170,7 @@ it('should display title and children', () => {
 });
 ```
 
-### 5. Testing Framework / Language Behavior
+### 5. Testing Framework / Library Behavior
 
 Don't test that React renders children, that `useState` holds state, or that `Array.filter` filters. Trust the platform.
 
@@ -181,6 +181,34 @@ it('should update state when setState is called', () => {
   setValue('hello');
   expect(value).toBe('hello'); // testing React, not your code
 });
+```
+
+#### Thin wrapper variant
+
+When a component is a pass-through wrapper around a library, testing the library's built-in behavior through your wrapper is the same anti-pattern. If your component has zero branching logic, every test is testing the library.
+
+**Bad** — `DialogWrapper` just forwards `open`/`onClose` to MUI `<Dialog>`:
+```ts
+// DialogWrapper has NO custom logic — just <Dialog open={open} onClose={onClose}>
+it('should call onClose on backdrop click', () => { ... });   // MUI behavior
+it('should call onClose on Escape key', () => { ... });       // MUI behavior
+it('should not be visible when open is false', () => { ... }); // MUI behavior
+```
+
+**How to spot it:** If the component has no `if`, no computed values, no event transformation — just JSX passing props to a library component — then behavioral tests on that component are testing the library, not your code. Test the *consumer* that uses the wrapper instead.
+
+#### Multiple-trigger-same-handler variant
+
+When different UI triggers (Escape, backdrop click, close button) all call the same `onClose` prop, testing each trigger separately is redundant at the wrapper level. One integration test at the consumer level is enough.
+
+```ts
+// Bad — two tests, same handler, same assertion, different trigger
+it('should close dialog on backdrop click', ...);
+it('should close dialog on Escape key', ...);
+
+// Good — one test proves the close flow works
+it('should close dialog on backdrop click without creating a user', ...);
+// Skip the Escape variant — same onClose handler, same outcome
 ```
 
 ### 6. Implementation-Coupled Tests
