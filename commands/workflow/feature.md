@@ -7,7 +7,11 @@ description: 用 Spec Kit 流程開發新功能，自動建立 worktree 隔離
 
 **功能描述：** $ARGUMENTS
 
-## Step 1
+## Step 1 - 建立 worktree
+
+用 EnterWorktree 工具建立隔離的開發環境，後續所有開發都在該 worktree 下進行。
+
+## Step 2 - Spec-Driven Development（在 worktree 中執行）
 
 1. /speckit.specify 描述功能需求和使用情境（what & why，不提技術）
 2. /speckit.clarify 主動提問補齊模糊的需求
@@ -16,12 +20,13 @@ description: 用 Spec Kit 流程開發新功能，自動建立 worktree 隔離
 5. /speckit.tasks 拆解成可執行的任務清單
 6. /speckit.implement 執行實作
 
-## Step 2 - 完成後
+## Step 3 - 完成後
 
-實作完成、測試通過後，告訴我：
+實作完成、測試通過後，用 ExitWorktree 離開，然後告訴我：
 
-- branch 名稱是什麼
+- branch 名稱
 - 實作摘要
+- 下一步（例如：review、merge）
 
 **原則：**
 
