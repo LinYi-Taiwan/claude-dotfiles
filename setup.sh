@@ -20,6 +20,11 @@ fi
 # Symlink settings.json (single file, always from dotfiles)
 ln -sf "$SCRIPT_DIR/settings.json" "$CLAUDE_HOME/settings.json"
 
+# Symlink statusline script
+if [ -f "$SCRIPT_DIR/.claude/statusline.sh" ]; then
+  ln -sf "$SCRIPT_DIR/.claude/statusline.sh" "$CLAUDE_HOME/statusline.sh"
+fi
+
 # For directories (skills, commands, .agents): create real directories and
 # symlink individual items inside. This allows the local machine to add its
 # own items without polluting the dotfiles repo.
