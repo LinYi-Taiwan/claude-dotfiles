@@ -20,6 +20,11 @@ fi
 # Symlink settings.json (single file, always from dotfiles)
 ln -sf "$SCRIPT_DIR/settings.json" "$CLAUDE_HOME/settings.json"
 
+# Symlink CLAUDE.md
+if [ -f "$SCRIPT_DIR/.claude/CLAUDE.md" ]; then
+  ln -sf "$SCRIPT_DIR/.claude/CLAUDE.md" "$CLAUDE_HOME/CLAUDE.md"
+fi
+
 # Symlink statusline script
 if [ -f "$SCRIPT_DIR/.claude/statusline.sh" ]; then
   ln -sf "$SCRIPT_DIR/.claude/statusline.sh" "$CLAUDE_HOME/statusline.sh"
