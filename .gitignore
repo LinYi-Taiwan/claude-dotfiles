@@ -1,4 +1,5 @@
 settings.json
 settings.local.json
 *.bak
+skills/remotion-best-practices/
 .DS_Store
