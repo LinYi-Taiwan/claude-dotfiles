@@ -69,8 +69,6 @@ echo "Claude dotfiles linked to $CLAUDE_HOME"
 if command -v claude &> /dev/null; then
   echo "Installing plugins..."
   PLUGINS=(
-    "ralph-wiggum"
-    "ralph-loop"
     "feature-dev"
     "frontend-design"
     "issue-to-dev@local-plugins"
