@@ -43,6 +43,7 @@ Use `browser_take_screenshot` when you need visual context (layout, styling, col
 - **Scroll-then-shoot instead of fullPage.** If you need to verify something below the fold, scroll to it and take another viewport screenshot. Multiple focused viewport shots almost always beat one giant full-page shot in both token cost and QA signal.
 - **`fullPage: true` is opt-in**, only when you genuinely need whole-page gestalt (design review of a landing page, short 404/empty-state pages).
 - **Format doesn't matter for tokens.** `type: "jpeg"` only shrinks the on-disk/network size; inline vision tokens are identical to PNG. `quality` is not exposed by the MCP tool.
+- **Set a sensible viewport early.** Right after the first `browser_navigate`, call `browser_resize` to **1280×720** (or smaller if the app supports it). Screenshot cost is per-pixel, and Chrome's default window can be much larger. **Do not shrink below the app's desktop breakpoint** (usually 1024px) — you'd trigger tablet/mobile layouts and end up verifying the wrong UI. Skip this for explicitly responsive QA where you want to test a specific viewport size.
 
 ### 4. Execute verification
 
