@@ -36,7 +36,7 @@ Call `browser_navigate` to the target URL. If the page fails to load, tell the u
 
 After navigation, immediately call `browser_snapshot` to get the accessibility tree. This is your primary way to "see" the page — it tells you every interactive element, its role, name, and state.
 
-Use `browser_take_screenshot` when you need visual context (layout, styling, colors) that the accessibility tree can't convey.
+Use `browser_take_screenshot` when you need visual context (layout, styling, colors) that the accessibility tree can't convey. **Always pass `type: "jpeg"`, `quality: 70`, and keep `fullPage: false`** — the default PNG full-page screenshot can consume 300k+ tokens, while a viewport JPEG at q70 is typically 40–60k. For element-level checks, pass an `element`/`ref` from the latest snapshot instead of shooting the whole viewport.
 
 ### 4. Execute verification
 
@@ -89,7 +89,7 @@ These are the Playwright MCP tools available to you. Call them directly — they
 | Tool | What it does |
 |------|-------------|
 | `browser_snapshot` | Get accessibility tree (primary perception — use this after every action) |
-| `browser_take_screenshot` | Capture visual screenshot (use for layout/styling verification) |
+| `browser_take_screenshot` | Capture visual screenshot — **always `type: "jpeg", quality: 70`, viewport-only** (see §3) |
 | `browser_console_messages` | Get all console log/warn/error messages |
 
 ### Interaction
