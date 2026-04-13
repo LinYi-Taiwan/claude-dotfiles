@@ -36,7 +36,13 @@ Call `browser_navigate` to the target URL. If the page fails to load, tell the u
 
 After navigation, immediately call `browser_snapshot` to get the accessibility tree. This is your primary way to "see" the page — it tells you every interactive element, its role, name, and state.
 
-Use `browser_take_screenshot` when you need visual context (layout, styling, colors) that the accessibility tree can't convey. **Always pass `type: "jpeg"`, `quality: 70`, and keep `fullPage: false`** — the default PNG full-page screenshot can consume 300k+ tokens, while a viewport JPEG at q70 is typically 40–60k. For element-level checks, pass an `element`/`ref` from the latest snapshot instead of shooting the whole viewport.
+Use `browser_take_screenshot` when you need visual context (layout, styling, colors) that the accessibility tree can't convey. **Screenshot token cost is per-pixel, not per-format**, so the real levers are *how many pixels you capture*:
+
+- **Default to viewport-only (`fullPage: false`).** A `fullPage: true` shot of a long page can easily hit 7k+ vision tokens and has blown past 300k tokens in practice. Viewport-only is typically ~1.5k.
+- **Prefer an element screenshot.** Pass `element` + `ref` from the latest `browser_snapshot` to capture just the widget you're verifying — cheapest and most targeted.
+- **Scroll-then-shoot instead of fullPage.** If you need to verify something below the fold, scroll to it and take another viewport screenshot. Multiple focused viewport shots almost always beat one giant full-page shot in both token cost and QA signal.
+- **`fullPage: true` is opt-in**, only when you genuinely need whole-page gestalt (design review of a landing page, short 404/empty-state pages).
+- **Format doesn't matter for tokens.** `type: "jpeg"` only shrinks the on-disk/network size; inline vision tokens are identical to PNG. `quality` is not exposed by the MCP tool.
 
 ### 4. Execute verification
 
@@ -89,7 +95,7 @@ These are the Playwright MCP tools available to you. Call them directly — they
 | Tool | What it does |
 |------|-------------|
 | `browser_snapshot` | Get accessibility tree (primary perception — use this after every action) |
-| `browser_take_screenshot` | Capture visual screenshot — **always `type: "jpeg", quality: 70`, viewport-only** (see §3) |
+| `browser_take_screenshot` | Capture visual screenshot — **default viewport-only; prefer `element`+`ref`; `fullPage: true` is opt-in** (see §3) |
 | `browser_console_messages` | Get all console log/warn/error messages |
 
 ### Interaction
