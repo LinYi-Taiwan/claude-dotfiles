@@ -165,6 +165,44 @@ Agent(
 >
 > 完成後回報結果。
 
+### Step 4.5 — Playwright MCP Self-QA（有 UI 變更時）
+
+檢查 Step 3 修改的檔案中是否包含 UI 檔案（`.tsx`, `.jsx`, `.vue`, `.html`, `.liquid`, `.erb`, `.svelte`）。
+
+**如果有 UI 變更**，開一個 Agent，給它以下指令：
+
+> 你是 QA 工程師。請使用 Playwright MCP tools 驗證剛實作的 UI 功能。
+>
+> **前置條件**：先讀取 `.specify/spec.md` 了解功能需求和 user journey。
+>
+> **驗證流程**：
+> 1. 確認 dev server 已在執行（嘗試用 Playwright MCP 導航到 baseURL，如果失敗就提醒使用者啟動 server）
+> 2. 根據 spec.md 描述的核心 user journey，用 Playwright MCP 逐步操作：
+>    - 導航到受影響的頁面
+>    - 執行主要互動流程（填表單、點按鈕、檢查回饋）
+>    - 對每個關鍵狀態截圖
+> 3. 驗證結果：
+>    - 頁面是否正常渲染（無 crash、無空白）
+>    - 核心互動是否有預期回饋
+>    - 錯誤狀態是否正確顯示
+>
+> **輸出格式**：
+> ```
+> ## Playwright Self-QA 結果
+>
+> | 驗證項目 | 結果 | 備註 |
+> |---------|------|------|
+> | 頁面渲染 | PASS/FAIL | ... |
+> | [user journey 1] | PASS/FAIL | ... |
+> | [user journey 2] | PASS/FAIL | ... |
+>
+> 截圖：[列出截圖路徑]
+> ```
+>
+> 如果有 FAIL，詳細描述問題和重現步驟。
+
+**如果沒有 UI 變更**，跳過此步驟。
+
 完成後直接進入 Step 5。
 
 ## Step 5 — 完成報告

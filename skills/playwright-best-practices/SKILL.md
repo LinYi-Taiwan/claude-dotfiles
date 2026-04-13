@@ -337,6 +337,92 @@ Flaky tests erode trust. Common causes and fixes:
 | State leaks between tests | Shared data | Ensure test isolation via `beforeEach` setup |
 | Different results per browser | Browser quirks | Use `test.skip` with condition for known issues |
 
+## ARIA Snapshot Testing
+
+ARIA snapshots capture the accessibility tree as YAML, letting you assert page structure and semantics in one shot. This validates both functionality and accessibility simultaneously.
+
+```ts
+// Assert the accessibility tree matches a YAML template
+await expect(page.getByRole('navigation')).toMatchAriaSnapshot(`
+  - navigation:
+    - link "Home"
+    - link "Products"
+    - link "About"
+`);
+```
+
+**When to use which assertion type:**
+
+| Assertion | Use When |
+|-----------|----------|
+| `toMatchAriaSnapshot()` | Validating page structure, navigation, form layout, component hierarchy |
+| `toBeVisible()` / `toHaveText()` | Validating single element state or content |
+| `toHaveScreenshot()` | Validating visual appearance (colors, spacing, layout) |
+
+**Partial matching** — you don't need the full tree, just the parts you care about:
+
+```ts
+// Only checks that these items exist within the list, ignores others
+await expect(page.getByRole('list')).toMatchAriaSnapshot(`
+  - list:
+    - listitem: "First item"
+    - listitem: "Third item"
+`);
+```
+
+**Regex in snapshots** — match dynamic content:
+
+```ts
+await expect(page.locator('main')).toMatchAriaSnapshot(`
+  - heading "Dashboard"
+  - text: /Welcome, .+/
+  - button "Log out"
+`);
+```
+
+**Generate snapshots with codegen:**
+```bash
+npx playwright codegen --save-aria-snapshot
+```
+The codegen UI has an "Assert snapshot" action that captures the current accessibility tree as a YAML assertion you can paste into your test.
+
+For full YAML syntax, partial matching rules, and advanced patterns, see `references/aria-snapshots.md`.
+
+## AI-Assisted Test Workflow
+
+When using AI agents (Claude Code, Copilot, etc.) to write Playwright tests, follow the **Record → Refine** pattern rather than asking AI to write tests from scratch.
+
+### Record → Refine Pattern
+
+1. **Record** — use `npx playwright codegen` or Playwright MCP to interact with your app and capture a raw test
+2. **Refine** — hand the recording to AI to:
+   - Replace fragile selectors with role-based locators
+   - Extract repeated patterns into fixtures or page objects
+   - Add meaningful assertions beyond "element exists"
+   - Remove redundant steps and clean up waits
+3. **Review** — treat the AI-generated test plan like a PR: trim duplicates, merge similar scenarios, verify it tests user-observable behavior
+
+### MCP-Driven Exploratory Testing
+
+Use Playwright MCP (`@playwright/mcp`) for interactive self-QA:
+
+- **Exploratory testing** — point the agent at your running app, describe what to verify in plain English
+- **Bug reproduction** — have the agent reproduce a flaky flow in a real browser
+- **Smoke testing** — after a deploy or feature completion, run core user journeys via MCP
+
+**Division of labor:**
+- **MCP** → exploratory testing, self-QA, debugging, one-off verification
+- **Test files (CLI/CI)** → repeatable regression tests that run on every PR
+
+### Avoiding AI Test Bloat
+
+Without constraints, AI agents produce dozens of overlapping test cases. To prevent this:
+
+- Give the agent a focused scope: "test the checkout flow" not "test the app"
+- Review the test plan before generating code — cut duplicate scenarios
+- Limit to critical user journeys: auth, core features, transactions, error recovery
+- One test per user-observable behavior, not one test per implementation detail
+
 ## Anti-Patterns to Avoid
 
 1. **Arbitrary waits** — `waitForTimeout(3000)` is never the answer
@@ -348,6 +434,7 @@ Flaky tests erode trust. Common causes and fixes:
 7. **Ignoring trace viewer** — always use traces over screenshots for debugging CI failures
 8. **Giant test files** — split by feature, keep each file focused
 9. **Hardcoded waits for animations** — use `page.getByRole(...).click({ force: true })` or disable animations in test config
+10. **AI tests from imagination** — always start from codegen or MCP recordings, then refine
 
 ## CI Integration
 
@@ -357,3 +444,4 @@ For GitHub Actions, see `references/ci-config.md` for a production-ready workflo
 
 - For the full Playwright API locator and assertion reference, see `references/api-patterns.md`
 - For mobile and responsive testing patterns, see `references/mobile-testing.md`
+- For ARIA snapshot YAML syntax and advanced patterns, see `references/aria-snapshots.md`
