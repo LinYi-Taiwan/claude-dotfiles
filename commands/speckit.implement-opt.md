@@ -173,6 +173,7 @@ You **MUST** consider the user input before proceeding (if not empty).
    **For sequential tasks** — call the Agent tool:
    ```
    Agent(
+     model="sonnet",
      prompt="
    <task>
    Implement the following speckit tasks for feature: {feature_name}
@@ -206,10 +207,12 @@ You **MUST** consider the user input before proceeding (if not empty).
    ```
    # You MUST send all these Agent tool calls in ONE message (not sequentially)
    Agent(
+     model="sonnet",
      isolation="worktree",
      prompt="<task>...</task> <files_to_read>...</files_to_read> <tasks>{single task}</tasks>"
    )
    Agent(
+     model="sonnet",
      isolation="worktree",
      prompt="<task>...</task> <files_to_read>...</files_to_read> <tasks>{another task}</tasks>"
    )
