@@ -115,6 +115,7 @@ status: in_progress
 Task:
   description: "Issue #<N> Stream <X>"
   subagent_type: "general-purpose"
+  model: "sonnet"
   prompt: |
     You are working on Issue #<N> in the epic worktree at: ../epic-<name>/
     
