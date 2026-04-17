@@ -55,6 +55,23 @@ You **MUST** consider the user input before proceeding (if not empty).
 
 如果你發現自己在寫實作程式碼，**立即停下**，改用 Agent tool 開 sub-agent。
 
+### 🚨 每次 Agent() 呼叫的鐵則
+
+**每一個** spawn 的 Agent 都 MUST 包含：
+
+1. **`model="sonnet"`** — 不傳就會繼承 parent（通常 Opus），token 成本至少 5×。**這是預設失敗，不是預設成功。**
+2. **`subagent_type="speckit-executor"`** — fresh context 執行 task。
+   **Fallback**：若該 agent 在當前環境不存在，降級用 `subagent_type="general-purpose"`，**`model="sonnet"` 絕不可省略**。
+
+### Spawn 前的 self-check（每批都做）
+
+在送出 Agent tool call 前，**先在文字中說一句**：
+
+> 「準備 spawn N 個 agent，subagent_type=X，model=sonnet ✓」
+
+如果你發現自己沒寫這句、或寫了但發現某個 Agent call 缺 `model=`，**停下來補上再送**。
+看到下方範例 code block 不代表你會自動套用 — 抄形狀也要抄參數。
+
 ---
 
 ## Outline
@@ -173,7 +190,8 @@ You **MUST** consider the user input before proceeding (if not empty).
    **For sequential tasks** — call the Agent tool:
    ```
    Agent(
-     model="sonnet",
+     subagent_type="speckit-executor",  # fallback: "general-purpose" if unavailable
+     model="sonnet",                    # MANDATORY — never omit
      prompt="
    <task>
    Implement the following speckit tasks for feature: {feature_name}
@@ -207,11 +225,13 @@ You **MUST** consider the user input before proceeding (if not empty).
    ```
    # You MUST send all these Agent tool calls in ONE message (not sequentially)
    Agent(
-     model="sonnet",
+     subagent_type="speckit-executor",  # fallback: "general-purpose" if unavailable
+     model="sonnet",                    # MANDATORY — never omit
      isolation="worktree",
      prompt="<task>...</task> <files_to_read>...</files_to_read> <tasks>{single task}</tasks>"
    )
    Agent(
+     subagent_type="speckit-executor",
      model="sonnet",
      isolation="worktree",
      prompt="<task>...</task> <files_to_read>...</files_to_read> <tasks>{another task}</tasks>"

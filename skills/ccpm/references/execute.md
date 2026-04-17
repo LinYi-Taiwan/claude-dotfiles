@@ -109,13 +109,17 @@ status: in_progress
 - Starting implementation
 ```
 
-**Step 3 — Launch parallel agents** for each stream that can start immediately:
+**Step 3 — Launch parallel agents** for each stream that can start immediately.
+
+> 🚨 **MANDATORY**: every Agent/Task call below MUST include `model: "sonnet"`.
+> 不傳會繼承 parent 的 Opus，token 成本至少 5×。
+> Spawn 前先說一句：「準備 spawn N 個 agent，subagent_type=general-purpose, model=sonnet ✓」。
 
 ```yaml
 Task:
   description: "Issue #<N> Stream <X>"
   subagent_type: "general-purpose"
-  model: "sonnet"
+  model: "sonnet"  # MANDATORY — never omit
   prompt: |
     You are working on Issue #<N> in the epic worktree at: ../epic-<name>/
     

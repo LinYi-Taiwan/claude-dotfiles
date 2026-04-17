@@ -30,11 +30,12 @@ Read the epic fully. Analyze for parallelism — which pieces of work can happen
 - Medium (5–10 tasks): batch into 2–3 groups, spawn parallel Task agents
 - Large (>10 tasks): analyze dependencies first, launch parallel agents (max 5 concurrent), create dependent tasks after prerequisites
 
-For parallel creation, use the Task tool:
+For parallel creation, use the Task tool (MUST include `model: "sonnet"` — never omit, or the agent inherits parent's Opus and burns 5× tokens):
 ```yaml
 Task:
   description: "Create task files batch N"
   subagent_type: "general-purpose"
+  model: "sonnet"  # MANDATORY — never omit
   prompt: |
     Create task files for epic: <name>
     Tasks to create: [list 3-4 tasks]
